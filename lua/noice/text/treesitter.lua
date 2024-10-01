@@ -36,6 +36,12 @@ function M.highlight(buf, ns, range, lang)
   -- we can't use a cached parser here since that could interfere with the existing parser of the buffer
   local LanguageTree = require("vim.treesitter.languagetree")
   local opts = { injections = { php = "", html = "" } }
+  local has_parser, err = pcall(vim.treesitter.get_parser, 0, lang, { error = true })
+
+  if err then
+    return
+  end
+
   local parser = LanguageTree.new(buf --[[@as integer]], lang, opts)
 
   ---@diagnostic disable-next-line: invisible
